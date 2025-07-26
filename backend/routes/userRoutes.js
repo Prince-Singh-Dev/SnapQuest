@@ -2,8 +2,11 @@
 
 const express = require('express');
 const router = express.Router();
-const { getUserProfile , toggleFollowUser } = require('../controllers/userController');
+const { getUserProfile , toggleFollowUser, getMyProfile } = require('../controllers/userController');
 const { protect } = require('../middleware/authMiddleware');
+
+//Get your own Profile
+router.get('/profile',protect,getMyProfile);
 
 // Public Routes Setup to fetch a user's Profile
 router.get('/:id',getUserProfile);
