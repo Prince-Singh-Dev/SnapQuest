@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const authRoutes = require('./routes/authRoutes');
+const userRoutes = require('./routes/userRoutes');
 const cors = require('cors');
 
 
@@ -18,6 +19,7 @@ app.use(express.json());  //Parse Incoming JSON request bodies
 
 //Routes
 app.use('/api/auth',authRoutes);
+app.use('/api/users',userRoutes);
 
 //Basic routes to test the servers
 app.get('/',(req,res)=>{
