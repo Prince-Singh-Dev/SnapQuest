@@ -21,6 +21,9 @@ app.use(express.json());  //Parse Incoming JSON request bodies
 app.use('/api/auth',authRoutes);
 app.use('/api/users',userRoutes);
 
+//Uploads route
+app.use('/uploads',express.static('uploads'));
+
 //Basic routes to test the servers
 app.get('/',(req,res)=>{
     res.send("SnapQuest Backend is Running");

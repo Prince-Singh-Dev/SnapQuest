@@ -33,6 +33,11 @@ const userSchema = new mongoose.Schema({
         maxlength:500,
     },
 
+    profilePic :{
+        type:String,
+        default:''
+    },
+
     followers :  [{
         type : mongoose.Schema.Types.ObjectId,
         ref : 'User'

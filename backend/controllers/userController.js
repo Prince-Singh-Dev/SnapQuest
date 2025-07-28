@@ -99,9 +99,30 @@ const updateProfile = async(req,res)=>{
     }
 };
 
+const uploadProfilePic = async (req,res)=>{
+    try {
+        if(!req.file){
+            return res.status(400).json({message : 'No File Uploaded'});
+        }
+
+        const user = await User.findById(req.user._id);
+        user.profilePic = `/uploads/profilePics/${req.file.filename}`;
+        await user.save();
+
+        res.status(200).json({
+            message: 'Profile Picture Uploaded Successfully',
+            profilePic : user.profilePic
+        });
+    } catch (err){
+        console.error('Upload error:',err.message);
+        res.status(500).json({message : 'Server Error'});
+    }
+};
+
 module.exports = {
     getUserProfile,
     toggleFollowUser,
     getMyProfile,
     updateProfile,
+    uploadProfilePic,
 };
