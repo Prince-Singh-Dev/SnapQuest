@@ -70,8 +70,38 @@ const toggleFollowUser = async (req , res) => {
     }
 };
 
+// Logic for giving access to the user to update their profile like username , email-id and other things
+const updateProfile = async(req,res)=>{
+    try{
+        const user = await User.findById(req.user._id);
+
+        if(!user){
+            return res.status(404).json({message : 'User not Found'});
+        }
+
+        //Updating only if values are provided by user
+        user.username = req.body.username||user.username;
+        user.email = req.body.email || user.email;
+        user.bio = req.body.bio !== undefined ? req.body.bio : user.bio;
+
+        const updateUser = await user.save();
+
+        res.status(200).json({
+            _id: updateUser.username,
+            username : updateUser.username,
+            email:updateUser.email,
+            bio : updateUser.bio,
+            message : 'Profile Updated Successfully',
+        });
+    } catch(err){
+        console.error('updateProfile Error :',err.message);
+        res.status(500).json({ message : 'Server Error'});
+    }
+};
+
 module.exports = {
     getUserProfile,
     toggleFollowUser,
     getMyProfile,
+    updateProfile,
 };
