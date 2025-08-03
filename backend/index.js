@@ -5,6 +5,7 @@ const dotenv = require('dotenv');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const lessonRoutes = require('./routes/lessonRoutes');
+const lessonProgressRoutes = require('./routes/lessonProgressRoutes');
 const cors = require('cors');
 
 
@@ -22,6 +23,7 @@ app.use(express.json());  //Parse Incoming JSON request bodies
 app.use('/api/auth',authRoutes);
 app.use('/api/users',userRoutes);
 app.use('/api/lessons',lessonRoutes);
+app.use('/api/lessons',lessonProgressRoutes);
 
 //Uploads route
 app.use('/uploads',express.static('uploads'));
