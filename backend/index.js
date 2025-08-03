@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
+const lessonRoutes = require('./routes/lessonRoutes');
 const cors = require('cors');
 
 
@@ -20,6 +21,7 @@ app.use(express.json());  //Parse Incoming JSON request bodies
 //Routes
 app.use('/api/auth',authRoutes);
 app.use('/api/users',userRoutes);
+app.use('/api/lessons',lessonRoutes);
 
 //Uploads route
 app.use('/uploads',express.static('uploads'));
