@@ -24,6 +24,7 @@ app.use('/api/auth',authRoutes);
 app.use('/api/users',userRoutes);
 app.use('/api/lessons',lessonRoutes);
 app.use('/api/lessons',lessonProgressRoutes);
+app.use('/api/submissions',require('./routes/submissionRoutes'));
 
 //Uploads route
 app.use('/uploads',express.static('uploads'));
