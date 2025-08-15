@@ -1,99 +1,118 @@
-const Submission = require('../models/Submission');
-const Challenge = require('../models/challenge');
+const asyncHandler = require('express-async-handler');
+const mongoose = require('mongoose');
+const Submission = require('../models/submissionModel');
+const Challenge = require('../models/challengeModel');
 
-// @desc Submit a photo to a challenge
-// @route POST /api/challenge/:challengeId/submit
-// @access Private
+// @desc Submit to challenge
+const submitToChallenge = asyncHandler(async (req, res) => {
+    const { challengeId } = req.params;
+    const { photo } = req.body; // This will be file path if using Multer
 
-const submitToChallenge = async (req,res) =>{
-    const {photoUrl , caption} = req.body;
-    const userId = req.user._id;
-    const challengeId = req.params.challengeId;
-
-    try{
-        //Checking if challenge exists or not
-        const challenge = await Challenge.findById(challengeId);
-        if(!challenge){
-            return res.status(404).json({message : 'Challenge not found'});
-        }
-
-        // Checking If challenge is already submitted or not
-        const existingSubmission = await Submission.findOne({user:userId,challenge:challengeId});
-        if(existingSubmission){
-            return res.status(404).json({message:'You have already Submitted to this Challenge'});
-        }
-
-        const submission = await Submission.create({
-            user:userId,
-            challenge:challengeId,
-            photoUrl,
-            caption,
-        });
-
-        res.status(201).json(submission);
-    } catch(err){
-        console.error('Submission Error :',err.message);
-        res.status(500).json({message:'Server error'});
+    // Validate challenge exists
+    const challenge = await Challenge.findById(challengeId);
+    if (!challenge) {
+        res.status(404);
+        throw new Error('Challenge not found');
     }
-};
 
-// @desc Vote on a submission
-// @route POST /api/submission/:submissionId/vote
-// @access Private
+    // Check if user already submitted
+    const alreadySubmitted = await Submission.findOne({
+        challenge: challengeId,
+        user: req.user._id
+    });
 
-const voteSubmission = async (req,res) =>{
-    const userId = req.user._id;
-    const submissionId = req.params.submissionId;
-
-    try{
-        const submission = await Submission.findById(submissionId);
-
-        if(!submission){
-            return res.status(404).json({message:'Submission not found'});
-        }
-
-        const hasVoted = submission.votes.includes(userId);
-
-        if(hasVoted){
-            //Unvote
-            submission.votes.pull(userId);
-        } else{
-            //Vote
-            submission.votes.push(userId);
-        }
-
-        await submission.save();
-
-        res.status(200).json({
-            message:hasVoted ? 'Vote Removed':'Voted SuccessFully',
-            totalVotes : submission.votes.length
-        });
-    } catch(err){
-        console.error('Voting Error : ', err.message);
-        res.status(500).json({message:'Server Error'});
+    if (alreadySubmitted) {
+        res.status(400);
+        throw new Error('You have already submitted to this challenge');
     }
-};
 
-//@desc Get all Submissions for a challenge
-//@route GET/api/challenges/:challengesId/submissions
-//@access Public
+    // Create submission
+    const submission = await Submission.create({
+        challenge: challengeId,
+        user: req.user._id,
+        photo
+    });
 
-const getChallengeSubmissions = async(req,res) =>{
-    const challengeId = req.params.challengeId;
+    res.status(201).json(submission);
+});
 
-    try{
-        const submissions = await Submission.find({challenge:challengeId})
-            .populate('user','username')
-            .sort({votes:-1});  //Sorting By highest Votes
-        res.status(200).json(submissions);
-    } catch(err){
-        console.error('Fetch Submission Error:',err.message);
-        res.status(500).json({message:'Server Error'});
+// @desc Get all submissions for a challenge (sorted by votes)
+const getChallengeSubmissions = asyncHandler(async (req, res) => {
+    const { challengeId } = req.params;
+
+    const submissions = await Submission.aggregate([
+        { $match: { challenge: new mongoose.Types.ObjectId(challengeId) } },
+        { $addFields: { voteCount: { $size: "$votes" } } },
+        { $sort: { voteCount: -1, createdAt: 1 } },
+        {
+            $lookup: {
+                from: "users",
+                localField: "user",
+                foreignField: "_id",
+                as: "userDetails"
+            }
+        },
+        { $unwind: "$userDetails" },
+        {
+            $project: {
+                _id: 1,
+                photo: 1,
+                challenge: 1,
+                voteCount: 1,
+                createdAt: 1,
+                "userDetails._id": 1,
+                "userDetails.name": 1,
+                "userDetails.profilePic": 1
+            }
+        }
+    ]);
+
+    res.json(submissions);
+});
+
+// @desc Get all submissions of the logged-in user
+const getUserSubmissions = asyncHandler(async (req, res) => {
+    const submissions = await Submission.find({ user: req.user._id })
+        .populate('challenge', 'title deadline')
+        .sort({ createdAt: -1 });
+
+    res.json(submissions);
+});
+
+// @desc Vote or unvote a submission
+const voteSubmission = asyncHandler(async (req, res) => {
+    const { submissionId } = req.params;
+
+    const submission = await Submission.findById(submissionId);
+    if (!submission) {
+        res.status(404);
+        throw new Error('Submission not found');
     }
-};
+
+    const alreadyVoted = submission.votes.includes(req.user._id);
+
+    if (alreadyVoted) {
+        // Unvote
+        submission.votes = submission.votes.filter(
+            (vote) => vote.toString() !== req.user._id.toString()
+        );
+    } else {
+        // Add vote
+        submission.votes.push(req.user._id);
+    }
+
+    await submission.save();
+
+    res.json({
+        submissionId: submission._id,
+        votes: submission.votes.length,
+        message: alreadyVoted ? 'Vote removed' : 'Vote added'
+    });
+});
 
 module.exports = {
     submitToChallenge,
-    voteSubmission,
     getChallengeSubmissions,
+    getUserSubmissions,
+    voteSubmission
 };
