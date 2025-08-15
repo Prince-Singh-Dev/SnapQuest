@@ -45,6 +45,11 @@ const userSchema = new mongoose.Schema({
 
     badges : [String],  //Storing Earned Badges by each user seprately 
 
+    isAdmin : {
+        type: Boolean,
+        default : false
+    },
+
     perks : {
         type : Number,
         default : 0
