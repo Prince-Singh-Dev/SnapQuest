@@ -1,6 +1,7 @@
 // Challenge Model
 
 const mongoose = require('mongoose');
+const Submission = require('./Submission');
 
 const challengeSchema = new mongoose.Schema({
     title : {
@@ -35,7 +36,20 @@ const challengeSchema = new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref : 'User',
         required:true
-    }
+    },
+    status:{
+        type : String,
+        enum : ['active','completed'],
+        default:'active'
+    },
+    winners : [
+        {
+            user : {type : mongoose.Schema.Types.ObjectId,ref:'User'},
+            submissionId : {type : mongoose.Schema.Types.ObjectId,ref:'Submission'},
+            rank : Number,
+            votes : Number
+        }
+    ]
 },{timestamps:true});
 
 module.exports = mongoose.model('Challenge',challengeSchema);
