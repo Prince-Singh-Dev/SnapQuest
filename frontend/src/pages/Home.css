@@ -1,0 +1,198 @@
+/* Global Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, html, #root, .home-container {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  font-family: "Poppins", sans-serif;
+  color: #fff;
+  background: #000;
+}
+
+/* ===================== STARFIELD BACKGROUND ===================== */
+.home-container {
+  position: relative;
+  flex: 1 0 auto;
+  width: 100%;
+  background: radial-gradient(ellipse at center, #0b0d17, #000 80%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+/* Stars effect */
+.home-container::before, 
+.home-container::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent url("https://www.transparenttextures.com/patterns/stardust.png") repeat;
+  opacity: 0.5;
+  animation: starfield 100s linear infinite;
+  z-index: 0;
+}
+.home-container::after {
+  animation-duration: 200s;
+  opacity: 0.3;
+}
+
+@keyframes starfield {
+  from { transform: translateY(0); }
+  to { transform: translateY(-1000px); }
+}
+
+/* ===================== NAVBAR ===================== */
+nav {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  padding: 1rem 3rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 2rem;
+  background: transparent;
+  z-index: 10;
+}
+
+nav a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+nav a:hover {
+  color: #00ffe7;
+  text-shadow: 0 0 10px #00ffe7;
+}
+
+/* ===================== HERO SECTION ===================== */
+.hero {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 6rem 2rem 4rem;
+  z-index: 2;
+  animation: fadeIn 1.5s ease-in-out;
+}
+
+.hero h1 {
+  font-size: 3rem;
+  text-shadow: 0 0 15px rgba(255,255,255,0.8);
+}
+
+.hero p {
+  margin-top: 1rem;
+  font-size: 1.2rem;
+  max-width: 600px;
+  color: #dcdcdc;
+}
+
+/* CTA Button */
+.cta-btn {
+  margin-top: 2rem;
+  padding: 0.8rem 2rem;
+  font-size: 1rem;
+  border: 2px solid #00ffe7;
+  background: transparent;
+  color: #00ffe7;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-shadow: 0 0 8px #00ffe7;
+}
+
+.cta-btn:hover {
+  background: #00ffe7;
+  color: #000;
+  box-shadow: 0 0 20px #00ffe7;
+  transform: scale(1.05);
+}
+
+/* ===================== FEATURES / CARDS ===================== */
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  padding: 4rem 2rem;
+  z-index: 2;
+  width: 100%;
+  max-width: 1200px;
+  animation: slideUp 1.2s ease-in-out;
+}
+
+.feature-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 8px 25px rgba(0, 255, 231, 0.1);
+  transition: all 0.3s ease;
+}
+
+.feature-card h2 {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  text-shadow: 0 0 10px rgba(255,255,255,0.6);
+}
+
+.feature-card p {
+  margin-bottom: 1rem;
+  color: #dcdcdc;
+}
+
+.feature-card a {
+  color: #00ffe7;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.feature-card:hover {
+  transform: translateY(-10px) scale(1.03);
+  box-shadow: 0 15px 30px rgba(0, 255, 231, 0.25);
+}
+
+/* ===================== FOOTER ===================== */
+.footer {
+  padding: 2rem;
+  text-align: center;
+  background: transparent;
+  color: #aaa;
+  font-size: 0.9rem;
+  width: 100%;
+  flex-shrink: 0;
+  z-index: 2;
+}
+
+/* ===================== ANIMATIONS ===================== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(50px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===================== RESPONSIVE ===================== */
+@media (max-width: 768px) {
+  .hero h1 { font-size: 2.2rem; }
+  .hero p { font-size: 1rem; }
+  nav { justify-content: center; padding: 1rem; }
+}
