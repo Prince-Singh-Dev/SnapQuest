@@ -1,21 +1,40 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import './index.css';
+import { BrowserRouter as Router , Routes , Route , Link } from "react-router-dom";
+import Home from "./pages/Home";
+import Lessons from "./pages/Lessons";
+import Challenges from "./pages/Challenges";
+import Profile from "./pages/Profile";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import "./App.css";
 
 function App(){
   return (
-    <div className = "min-h-screen flex items-center justify-center bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
-      <div className = "bg-white p-8 rounded-2x1 shadow-lg text-center">
-        <h1 className = " bg-blue-500 text-white p-6 rounded-lg text-4xl font-bold text-gray-800 mb-4">
-          Tailwind is Working !
-        </h1>
-        <p className="text-lg text-gray-600">
-          If you see this styled box, Tailwind CSS is set up correctly
-        </p>
+    <Router>
+      <div>
+        {/* Navbar */}
+        <nav className="navbar">
+          <h1 className="logo">SnapQuest</h1>
+          <ul>
+            <li><Link to="/">Home</Link></li>
+            <li><Link to="/lessons">Lessons</Link></li>
+            <li><Link to="/challenges">Challenges</Link></li>
+            <li><Link to="/profile">Profile</Link></li>
+            <li><Link to="/login">Login</Link></li>
+            <li><Link to="/signup">Signup</Link></li>
+          </ul>
+        </nav>
+
+        {/* Page Routes */}
+        <Routes>
+          <Route path="/" element={<Home />}/>
+          <Route path="/lessons" element={<Lessons/>}/>
+          <Route path="/challenges" element={<Challenges />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+        </Routes>
       </div>
-    </div>
+    </Router>
   );
 }
 
