@@ -1,0 +1,158 @@
+/* ====== Challenges Container ====== */
+.challenges-container {
+  text-align: center;
+  padding: 60px 20px;
+  font-family: "Poppins", sans-serif;
+  color: #fff;
+  background: url("https://www.transparenttextures.com/patterns/stardust.png"),
+              radial-gradient(ellipse at top, #050510, #000); /* darker space */
+  background-size: cover;
+  min-height: 100vh;
+}
+
+.challenges-container h1 {
+  font-size: 2.5rem;
+  margin-bottom: 12px;
+  color: #00ffe7;
+  text-shadow: 0 0 20px rgba(0, 255, 231, 0.9), 0 0 40px rgba(0, 200, 255, 0.4);
+}
+
+.challenges-container p {
+  color: #aaa;
+  margin-bottom: 40px;
+  font-size: 1.1rem;
+}
+
+/* ====== Grid Layout ====== */
+.challenges-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 25px;
+  justify-content: center;
+}
+
+/* ====== Challenge Card ====== */
+.challenge-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 25px;
+  width: 280px;
+  border: 1px solid rgba(0, 255, 231, 0.25);
+  box-shadow: 0 0 35px rgba(0, 255, 231, 0.12);
+  text-align: center;
+  transition: transform 0.5s ease, box-shadow 0.5s ease;
+  cursor: pointer;
+  position: relative;
+
+  /* Entry animation */
+  transform: scale(0.85) rotateZ(-8deg);
+  opacity: 0;
+  filter: blur(16px);
+  animation: materialize3D 0.9s cubic-bezier(.2,.8,.2,1) forwards;
+}
+
+/* Stagger entry for nice cascade */
+.challenge-card:nth-child(1) { animation-delay: 0.12s; }
+.challenge-card:nth-child(2) { animation-delay: 0.24s; }
+.challenge-card:nth-child(3) { animation-delay: 0.36s; }
+.challenge-card:nth-child(4) { animation-delay: 0.48s; }
+
+/* Hover Zoom Out + Glow */
+.challenge-card:hover {
+  transform: scale(1.15) rotateZ(0deg);  /* Zoom out */
+  box-shadow: 0 0 50px rgba(0, 255, 231, 0.5), 
+              0 0 80px rgba(0, 200, 255, 0.2);
+  z-index: 5;
+}
+
+/* ====== Card Content ====== */
+.challenge-card h2 {
+  font-size: 1.4rem;
+  margin-bottom: 8px;
+  color: #fff;
+  text-shadow: 0 0 15px rgba(0, 255, 231, 0.7);
+}
+
+.challenge-card p {
+  font-size: 1rem;
+  margin: 6px 0;
+  color: #ccc;
+}
+
+.deadline {
+  font-weight: bold;
+  color: #ff4b4b;
+  text-shadow: 0 0 12px rgba(255, 75, 75, 0.7);
+}
+
+.reward {
+  font-weight: bold;
+  color: #00ff9d;
+  text-shadow: 0 0 12px rgba(0, 255, 157, 0.7);
+}
+
+/* ====== Buttons ====== */
+button {
+  padding: 12px 18px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 15px;
+  font-size: 0.95rem;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.35);
+}
+
+/* Button Variants */
+.join-btn {
+  background: linear-gradient(135deg, #00ffe7, #0099ff);
+  color: #000;
+  box-shadow: 0 0 15px rgba(0, 255, 231, 0.6);
+}
+
+.upcoming-btn {
+  background: linear-gradient(135deg, #444, #888);
+  color: #fff;
+  cursor: not-allowed;
+}
+
+.results-btn {
+  background: linear-gradient(135deg, #ffc107, #ff8c00);
+  color: #000;
+  box-shadow: 0 0 15px rgba(255, 193, 7, 0.6);
+}
+
+/* ====== Animations ====== */
+@keyframes materialize3D {
+  0% {
+    transform: scale(0.85) rotateZ(-8deg);
+    opacity: 0;
+    filter: blur(16px);
+  }
+  60% {
+    transform: scale(1.05) rotateZ(2deg);
+    opacity: 1;
+    filter: blur(4px);
+  }
+  100% {
+    transform: scale(1) rotateZ(0deg);
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+/* ====== Respect reduced motion ====== */
+@media (prefers-reduced-motion: reduce) {
+  .challenge-card {
+    animation: none !important;
+    transform: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+  }
+}
