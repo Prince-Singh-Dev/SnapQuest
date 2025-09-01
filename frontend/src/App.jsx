@@ -2,6 +2,7 @@ import { BrowserRouter as Router , Routes , Route , Link } from "react-router-do
 import Home from "./pages/Home";
 import Lessons from "./pages/Lessons";
 import Challenges from "./pages/Challenges";
+import ChallengeDetails from "./pages/ChallengeDetails";
 import Profile from "./pages/Profile";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -32,6 +33,8 @@ function App(){
           <Route path="/profile" element={<Profile />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/challenges" element={<Challenges/>} />
+          <Route path="/challenges/:id" element={<ChallengeDetails/>}/>
         </Routes>
       </div>
     </Router>

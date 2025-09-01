@@ -1,0 +1,160 @@
+/* Challenge Details Container */
+
+.challenge-details {
+    font-family: "Poppins" , sans-serif;
+    color: #fff;
+    padding: 50px 20px;
+    background: url("https://www.transparenttextures.com/patterns/stardust.png"),
+              radial-gradient(ellipse at top, #050510, #000);
+    min-height: 100vh;
+    line-height: 1.6;         
+}
+
+/* Hero Section */
+
+.challenge-hero{
+    text-align: center;
+    margin-bottom: 50px;
+    animation: fadeInDown 1s ease forwards;
+}
+
+.challenge-hero h1{
+    font-size: 3rem;
+    color: #00ffe7;
+    text-shadow: 0 0 25px rgba(0,255,231,0.9),
+                 0 0 50px rgba(0,200,255,0.4);
+    margin-bottom: 12px;
+}
+
+.challenge-hero .deadline{
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #ff4b4b;
+    text-shadow: 0 0 12px rgba(255 , 75 , 75 , 0.7);
+}
+
+.challenge-hero .reward{
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #00ff9b;
+    text-shadow: 0 0 12px rgba(0,255,157,0.7);
+    background: rgba(0, 255, 157, 0.1);
+    border: 1px solid rgb(0, 255, 157 , 0.4);
+    padding: 6px 16px;
+    border-radius: 12px;
+}
+
+/* Content Section */
+.challenge-content {
+    max-width: 800px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(0, 255, 231, 0.25);
+    box-shadow: 0 0 35px rgba(0, 255, 231, 0.12);
+    border-radius: 20px;
+    padding: 30px;
+    animation: fadeInUp 1.2s ease forwards;
+}
+
+.challenge-content h2{
+    font-size: 1.6rem;
+    color: #00ffe7;
+    margin-bottom: 15px;
+    text-shadow: 0 0 15px rgba(0,255,231,0.6);
+}
+
+.challenge-content p {
+    color: #ccc;
+    margin-bottom: 20px;
+    font-size: 1rem;
+}
+
+.challenge-content ul{
+    list-style: none;
+    padding: 0;
+    margin: 0 0 25px;
+}
+
+.challenge-content ul li {
+    background: rgba(255, 255, 255, 0.05);
+    margin: 8px 0;
+    padding: 10px 15px;
+    border-radius: 10px;
+    border-left: 4px solid #00ffe7;
+    color: #ddd;
+    font-size: 0.95rem;
+}
+
+/* Buttons */
+
+.challenge-actions{
+    text-align: center;
+    margin-top: 25px;
+}
+
+.challenge-actions button{
+    padding: 14px 22px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: transform 0.35s ease , box-shadow 0.35s ease;
+}
+
+.challenge-actions button:hover{
+    transform: scale(1.08);
+    box-shadow: 0 0 25px rgba(255,255,255,0.35);
+}
+
+/* CTA Variants */
+
+.join-btn{
+    background: linear-gradient(135deg , #00ffe7 , #0099ff);
+    color: #000;
+    box-shadow: 0 0 15px rgba(0,255,231,0.6);
+}
+
+.results-btn{
+    background: linear-gradient(135deg , #ffc107 , #ff8c00);
+    color : #000;
+    box-shadow: 0 0 15px rgba(255,193,7,0.6);
+}
+
+/* Animations */
+
+@keyframes fadeInDown{
+    from{
+        transform: translateY(-40px);
+        opacity: 0;
+    }
+    to{
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInUp {
+    from{
+        transform: translateY(40px);
+        opacity: 0;
+    }
+    to{
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Mobile Responsiveness */
+@media (max-width : 768px){
+    .challenge-heroh1{
+        font-size: 2rem;
+    }
+
+    .challenge-content{
+        padding: 20px;
+    }
+}

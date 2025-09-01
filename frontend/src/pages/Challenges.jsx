@@ -1,4 +1,5 @@
 // src/pages/Challenges.jsx
+import {Navigate, useNavigate} from "react-router-dom";
 import "./Challenge.css";
 
 function Challenges() {
@@ -43,13 +44,17 @@ function Challenges() {
             <p className="reward">🏆 {ch.reward}</p>
 
             {ch.status === "ongoing" && (
-              <button className="join-btn">Join Challenge →</button>
+              <button className="join-btn" onClick={() => Navigate(`/challenges/${ch.id}`)}>
+                Join Challenge →
+              </button>
             )}
             {ch.status === "upcoming" && (
               <button className="upcoming-btn" disabled>Coming Soon ⏳</button>
             )}
             {ch.status === "ended" && (
-              <button className="results-btn">View Results 🏅</button>
+              <button className="results-btn" onClick={()=> Navigate(`/challenges/${ch.id}/results`)}>
+                View Results 🏅
+              </button>
             )}
           </div>
         ))}
