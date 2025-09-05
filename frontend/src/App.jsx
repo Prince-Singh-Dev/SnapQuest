@@ -6,6 +6,8 @@ import ChallengeDetails from "./pages/ChallengeDetails";
 import Profile from "./pages/Profile";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import Voting from "./pages/Voting";
+
 import "./App.css";
 
 function App(){
@@ -35,6 +37,7 @@ function App(){
           <Route path="/signup" element={<Signup />} />
           <Route path="/challenges" element={<Challenges/>} />
           <Route path="/challenges/:id" element={<ChallengeDetails/>}/>
+          <Route path="/voting" element={<Voting/>}/>
         </Routes>
       </div>
     </Router>
