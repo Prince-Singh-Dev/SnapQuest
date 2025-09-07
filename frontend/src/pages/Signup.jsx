@@ -1,47 +1,52 @@
-import { useState,useContext } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
 import "./Auth.css";
 
-function Signup(){
-    const [name , setName] = useState("");
-    const [email,setEmail] = useState("");
-    const [password,setPassword] = useState("");
-    const {login} = useContext(AuthContext);
+function Signup() {
+    const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const { login } = useContext(AuthContext);
     const navigate = useNavigate();
 
-    const handleSignup = async(e) =>{
+    const handleSignup = async (e) => {
         e.preventDefault();
-        try{
-            const res = await axios.post("/api/users/signup",{
-                name,
-                email,
+        try {
+            const res = await axios.post("http://localhost:5000/api/auth/register", {
+                username: username.trim(),
+                email: email.trim().toLowerCase(),
                 password,
             });
 
-            // Immediately login the user after the signup
-            login(res.data.user , res.data.token);
+            alert("Signup Successful!");
 
-            //Redirecting to profile
+            // Correct login call
+            login(res.data.token, {
+                _id: res.data._id,
+                username: res.data.username,
+                email: res.data.email,
+            });
+
             navigate("/profile");
-        } catch(err){
-            alert("SignUp Failed . Try Again with a different email.");
+        } catch (err) {
+            console.error("Signup error: ", err.response?.data || err.message);
+            alert(err.response?.data?.message || "Signup Failed. Try Again.");
         }
     };
 
-    return(
+    return (
         <div className="auth-container">
             <h1>Sign Up</h1>
             <form onSubmit={handleSignup}>
                 <input
                     type="text"
-                    placeholder="Name"
-                    value={name}
-                    onChange={(e)=>setName(e.target.value)}
+                    placeholder="Username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
                     required
                 />
-
                 <input
                     type="email"
                     placeholder="Email"
@@ -49,15 +54,13 @@ function Signup(){
                     onChange={(e) => setEmail(e.target.value)}
                     required
                 />
-
                 <input
                     type="password"
                     placeholder="Password (min 6 chars)"
                     value={password}
-                    onChange={(e)=>setPassword(e.target.value)}
+                    onChange={(e) => setPassword(e.target.value)}
                     required
                 />
-
                 <button type="submit">Create Account</button>
             </form>
         </div>
@@ -65,10 +68,3 @@ function Signup(){
 }
 
 export default Signup;
-
-// How this works:
-// User signs up → axios.post("/api/users/signup") hits backend.
-// On success → res.data should include { user, token }.
-// We call login(res.data.user, res.data.token) from AuthContext.
-// That stores user + token in localStorage and updates context.
-// Navigate to /profile immediately.

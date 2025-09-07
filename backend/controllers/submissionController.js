@@ -1,7 +1,7 @@
 const asyncHandler = require('express-async-handler');
 const mongoose = require('mongoose');
-const Submission = require('../models/submissionModel');
-const Challenge = require('../models/challengeModel');
+const Submission = require('../models/Submission');
+const Challenge = require('../models/challenge');
 
 // @desc Submit to challenge
 const submitToChallenge = asyncHandler(async (req, res) => {
