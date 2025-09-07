@@ -1,5 +1,7 @@
-import { BrowserRouter as Router , Routes , Route , Link } from "react-router-dom";
-import { AuthProvider } from "./context/AuthContext";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { useContext } from "react";
+import { AuthProvider, AuthContext } from "./context/AuthContext";
+import ProtectedRoute from "./components/ProtectedRoute";
 import Home from "./pages/Home";
 import Lessons from "./pages/Lessons";
 import Challenges from "./pages/Challenges";
@@ -11,35 +13,78 @@ import Voting from "./pages/Voting";
 
 import "./App.css";
 
-function App(){
+function Navbar() {
+  const { user, logout } = useContext(AuthContext);
+
+  return (
+    <nav className="navbar">
+      <h1 className="logo">SnapQuest</h1>
+      <ul>
+        <li><Link to="/">Home</Link></li>
+        <li><Link to="/lessons">Lessons</Link></li>
+        <li><Link to="/challenges">Challenges</Link></li>
+
+        {user ? (
+          <>
+            <li><Link to="/profile">Profile</Link></li>
+            <li>
+              <button className="logout-btn" onClick={logout}>
+                Logout
+              </button>
+            </li>
+          </>
+        ) : (
+          <>
+            <li><Link to="/login">Login</Link></li>
+            <li><Link to="/signup">Signup</Link></li>
+          </>
+        )}
+      </ul>
+    </nav>
+  );
+}
+
+function App() {
   return (
     <AuthProvider>
       <Router>
         <div>
-          {/* Navbar */}
-          <nav className="navbar">
-            <h1 className="logo">SnapQuest</h1>
-            <ul>
-              <li><Link to="/">Home</Link></li>
-              <li><Link to="/lessons">Lessons</Link></li>
-              <li><Link to="/challenges">Challenges</Link></li>
-              <li><Link to="/profile">Profile</Link></li>
-              <li><Link to="/login">Login</Link></li>
-              <li><Link to="/signup">Signup</Link></li>
-            </ul>
-          </nav>
+          <Navbar />
 
           {/* Page Routes */}
           <Routes>
-            <Route path="/" element={<Home />}/>
-            <Route path="/lessons" element={<Lessons/>}/>
+            {/* Public Routes */}
+            <Route path="/" element={<Home />} />
+            <Route path="/lessons" element={<Lessons />} />
             <Route path="/challenges" element={<Challenges />} />
-            <Route path="/profile" element={<Profile />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
-            <Route path="/challenges" element={<Challenges/>} />
-            <Route path="/challenges/:id" element={<ChallengeDetails/>}/>
-            <Route path="/voting" element={<Voting/>}/>
+
+            {/* Protected Routes */}
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/challenges/:id"
+              element={
+                <ProtectedRoute>
+                  <ChallengeDetails />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/voting"
+              element={
+                <ProtectedRoute>
+                  <Voting />
+                </ProtectedRoute>
+              }
+            />
           </Routes>
         </div>
       </Router>
