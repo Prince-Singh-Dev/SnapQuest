@@ -1,0 +1,31 @@
+.profile-container{
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 2rem;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.profie-pic{
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 1rem;
+}
+
+.profile-stats {
+    margin-top: 1rem;
+    text-align: left;
+}
+
+.logout-btn{
+    margin-top: 1.5rem;
+    padding: 0.7rem 1.2rem;
+    background: crimson;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}

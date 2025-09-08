@@ -59,6 +59,7 @@ function App() {
             <Route path="/challenges" element={<Challenges />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
+            <Route path="/profile" element={<Profile/>} />
 
             {/* Protected Routes */}
             <Route
