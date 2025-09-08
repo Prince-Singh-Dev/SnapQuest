@@ -35,6 +35,8 @@ app.get('/',(req,res)=>{
     res.send("SnapQuest Backend is Running");
 })
 
+mongoose.set("strictPopulate",false);
+
 //Connecting the backend to MongoDB 
 mongoose.connect(process.env.MONGO_URI)
     .then(()=>{
