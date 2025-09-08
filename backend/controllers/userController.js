@@ -1,4 +1,4 @@
-const User = require("../models/User");
+const User = require ("../models/User");
 
 // Get another user's profile by ID (public)
 const getUserProfile = async (req, res) => {
