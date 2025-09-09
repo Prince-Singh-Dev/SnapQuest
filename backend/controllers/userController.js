@@ -4,14 +4,26 @@ const User = require ("../models/User");
 const getUserProfile = async (req, res) => {
   try {
     const user = await User.findById(req.params.id)
-      .select("-password") // exclude password
-      .populate("followers", "username email profilePic"); // populate followers
+      .select("-password") 
+      .populate("followers", "username profilePic"); // keep it light
 
     if (!user) {
       return res.status(404).json({ message: "User not Found" });
     }
 
-    res.status(200).json(user);
+    res.status(200).json({
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+      bio: user.bio,
+      profilePic: user.profilePic,
+      followers: user.followers,
+      badges: user.badges,
+      perks: user.perks,
+      points: user.points,
+      streak: user.streak,
+      createdAt: user.createdAt,
+    });
   } catch (err) {
     console.error("fetchUser Error:", err.message);
     res.status(500).json({ message: "Server Error" });
@@ -23,13 +35,27 @@ const getMyProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user._id)
       .select("-password")
-      .populate("followers", "username email profilePic"); // ✅ matches schema
+      .populate("followers", "username profilePic");
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res.json(user);
+    res.json({
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+      bio: user.bio,
+      profilePic: user.profilePic,
+      followers: user.followers,
+      badges: user.badges,
+      perks: user.perks,
+      points: user.points,
+      streak: user.streak,
+      isAdmin: user.isAdmin,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    });
   } catch (err) {
     console.error("getMyProfile Error:", err.message);
     res.status(500).json({ message: "Server Error" });
