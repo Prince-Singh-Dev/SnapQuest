@@ -1,99 +1,123 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
+import axios from "axios";
+import "./Profile.css";
 
-const Profile = () => {
-  const { user, token, setUser } = useContext(AuthContext);
-  const [loading, setLoading] = useState(true);
+function Profile() {
+  const { token, logout } = useContext(AuthContext);
   const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (token) {
-      fetch("http://localhost:5000/api/users/me", {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          setProfile(data);
-          setUser(data); // keep context updated
-          setLoading(false);
-        })
-        .catch(() => setLoading(false));
-    }
-  }, [token, setUser]);
+    if (!token) return;
 
-  if (loading) return <p className="text-center mt-5">Loading profile...</p>;
+    const fetchProfile = async () => {
+      try {
+        const res = await axios.get("http://localhost:5000/api/users/profile", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setProfile(res.data);
+      } catch (err) {
+        console.error("Profile fetch error:", err.response?.data || err.message);
+        if (err.response?.status === 401) logout();
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  if (!profile) return <p className="text-center mt-5">No profile found.</p>;
+    fetchProfile();
+  }, [token, logout]);
+
+  if (loading) return <p>Loading profile...</p>;
+  if (!profile) return <p>No profile data found.</p>;
 
   return (
-    <div className="max-w-2xl mx-auto bg-white shadow-lg rounded-2xl p-6 mt-10">
-      {/* Profile Header */}
-      <div className="flex items-center gap-6">
+    <div className="profile-container">
+      {/* === USER INFO === */}
+      <div className="profile-header">
         <img
-          src={
-            profile.profilePic
-              ? `http://localhost:5000${profile.profilePic}`
-              : "/default-avatar.png"
-          }
+          src={profile.profilePic || "/default-avatar.png"}
           alt="Profile"
-          className="w-24 h-24 rounded-full object-cover border"
+          className="profile-pic"
         />
         <div>
-          <h1 className="text-2xl font-bold">{profile.username}</h1>
-          <p className="text-gray-600">{profile.email}</p>
-          <p className="mt-1 text-gray-700 italic">{profile.bio || "No bio yet"}</p>
+          <h2>{profile.username}</h2>
+          <p>{profile.email}</p>
+          <p>{profile.bio || "No bio yet."}</p>
         </div>
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-2 gap-4 mt-6 text-center">
-        <div className="bg-gray-100 p-4 rounded-lg">
-          <h2 className="text-xl font-bold">{profile.followers?.length || 0}</h2>
-          <p className="text-gray-600">Followers</p>
-        </div>
-        <div className="bg-gray-100 p-4 rounded-lg">
-          <h2 className="text-xl font-bold">{profile.points || 0}</h2>
-          <p className="text-gray-600">Points</p>
-        </div>
-        <div className="bg-gray-100 p-4 rounded-lg">
-          <h2 className="text-xl font-bold">{profile.perks || 0}</h2>
-          <p className="text-gray-600">Perks</p>
-        </div>
-        <div className="bg-gray-100 p-4 rounded-lg">
-          <h2 className="text-xl font-bold">{profile.streak || 0}</h2>
-          <p className="text-gray-600">Streak</p>
-        </div>
+      {/* === STATS === */}
+      <div className="profile-stats">
+        <p><b>Followers:</b> {profile.followers?.length || 0}</p>
+        <p><b>Following:</b> {profile.following?.length || 0}</p>
+        <p><b>Badges:</b> {profile.badges?.length || 0}</p>
+        <p><b>Points:</b> {profile.points}</p>
+        <p><b>Perks:</b> {profile.perks}</p>
+        <p><b>Streak:</b> {profile.streak} 🔥</p>
       </div>
 
-      {/* Badges */}
-      <div className="mt-6">
-        <h2 className="text-lg font-semibold mb-2">Badges</h2>
-        {profile.badges?.length > 0 ? (
-          <div className="flex gap-2 flex-wrap">
-            {profile.badges.map((badge, idx) => (
-              <span
-                key={idx}
-                className="bg-yellow-200 text-yellow-800 px-3 py-1 rounded-full text-sm"
-              >
-                {badge}
-              </span>
+      {/* === FOLLOWERS LIST === */}
+      <div className="profile-followers">
+        <h3>Followers</h3>
+        {profile.followers?.length > 0 ? (
+          <ul>
+            {profile.followers.map((f) => (
+              <li key={f._id}>
+                <img
+                  src={f.profilePic || "/default-avatar.png"}
+                  alt={f.username}
+                  className="small-avatar"
+                />
+                {f.username}
+              </li>
             ))}
-          </div>
+          </ul>
         ) : (
-          <p className="text-gray-500">No badges earned yet.</p>
+          <p>No followers yet.</p>
         )}
       </div>
 
-      {/* Admin Flag */}
-      {profile.isAdmin && (
-        <div className="mt-6">
-          <span className="px-3 py-1 bg-red-200 text-red-800 rounded-full text-sm">
-            Admin
-          </span>
-        </div>
-      )}
+      {/* === COMPLETED LESSONS === */}
+      <div className="profile-lessons">
+        <h3>Completed Lessons</h3>
+        {profile.completedLessons?.length > 0 ? (
+          <div className="lesson-grid">
+            {profile.completedLessons.map((lesson) => (
+              <div className="lesson-card" key={lesson._id}>
+                <img src={lesson.thumbnail} alt={lesson.title} />
+                <h4>{lesson.title}</h4>
+                <p>{lesson.description}</p>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p>No lessons completed yet.</p>
+        )}
+      </div>
+
+      {/* === SUBMISSIONS === */}
+      <div className="profile-submissions">
+        <h3>Challenge Submissions</h3>
+        {profile.submissions?.length > 0 ? (
+          <div className="submission-grid">
+            {profile.submissions.map((sub) => (
+              <div className="submission-card" key={sub._id}>
+                <img src={sub.image} alt="submission" />
+                <p>Votes: {sub.votes}</p>
+                <p>
+                  Challenge: {sub.challenge?.title} <br />
+                  Deadline: {sub.challenge?.deadline}
+                </p>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p>No submissions yet.</p>
+        )}
+      </div>
     </div>
   );
-};
+}
 
 export default Profile;
