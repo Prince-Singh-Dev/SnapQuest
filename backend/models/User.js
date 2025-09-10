@@ -38,13 +38,30 @@ const userSchema = new mongoose.Schema(
             },
         ],
         badges:[String],
-        isAdmin:{
-            type:Boolean,
-            default:false,
-        },
         perks:{
             type:Number,
             default:0,
+        },
+        streak:{
+            type:Number,
+            default:0,
+        },
+        completedLessons:[{
+            type:mongoose.Schema.Types.ObjectId,
+            ref:"Lesson",
+        },
+    ],
+
+    submissiions:[
+        {
+            type:mongoose.Schema.Types.ObjectId,
+            ref:"Submission",
+        },
+    ],
+
+    isAdmin:{
+        type:Boolean,
+        default:false,
         },
     },
     {
