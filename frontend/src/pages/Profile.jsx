@@ -4,7 +4,7 @@ import axios from "axios";
 import "./Profile.css";
 
 function Profile() {
-  const { token, logout } = useContext(AuthContext);
+  const { user, token, logout } = useContext(AuthContext);
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -13,7 +13,7 @@ function Profile() {
 
     const fetchProfile = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/users/profile", {
+        const res = await axios.get("http://localhost:5000/api/users/me", {
           headers: { Authorization: `Bearer ${token}` },
         });
         setProfile(res.data);
@@ -52,9 +52,8 @@ function Profile() {
         <p><b>Followers:</b> {profile.followers?.length || 0}</p>
         <p><b>Following:</b> {profile.following?.length || 0}</p>
         <p><b>Badges:</b> {profile.badges?.length || 0}</p>
-        <p><b>Points:</b> {profile.points}</p>
-        <p><b>Perks:</b> {profile.perks}</p>
-        <p><b>Streak:</b> {profile.streak} 🔥</p>
+        <p><b>Perks:</b> {profile.perks || 0}</p>
+        <p><b>Streak:</b> {profile.streak || 0} 🔥</p>
       </div>
 
       {/* === FOLLOWERS LIST === */}
@@ -78,6 +77,27 @@ function Profile() {
         )}
       </div>
 
+      {/* === FOLLOWING LIST === */}
+      <div className="profile-following">
+        <h3>Following</h3>
+        {profile.following?.length > 0 ? (
+          <ul>
+            {profile.following.map((f) => (
+              <li key={f._id}>
+                <img
+                  src={f.profilePic || "/default-avatar.png"}
+                  alt={f.username}
+                  className="small-avatar"
+                />
+                {f.username}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>Not following anyone yet.</p>
+        )}
+      </div>
+
       {/* === COMPLETED LESSONS === */}
       <div className="profile-lessons">
         <h3>Completed Lessons</h3>
@@ -85,7 +105,7 @@ function Profile() {
           <div className="lesson-grid">
             {profile.completedLessons.map((lesson) => (
               <div className="lesson-card" key={lesson._id}>
-                <img src={lesson.thumbnail} alt={lesson.title} />
+                <img src={lesson.thumbnail || "/lesson-placeholder.png"} alt={lesson.title} />
                 <h4>{lesson.title}</h4>
                 <p>{lesson.description}</p>
               </div>
@@ -103,11 +123,11 @@ function Profile() {
           <div className="submission-grid">
             {profile.submissions.map((sub) => (
               <div className="submission-card" key={sub._id}>
-                <img src={sub.image} alt="submission" />
+                <img src={sub.image || "/submission-placeholder.png"} alt="submission" />
                 <p>Votes: {sub.votes}</p>
                 <p>
-                  Challenge: {sub.challenge?.title} <br />
-                  Deadline: {sub.challenge?.deadline}
+                  Challenge: {sub.challenge?.title || "Unknown"} <br />
+                  Deadline: {sub.challenge?.deadline || "N/A"}
                 </p>
               </div>
             ))}
