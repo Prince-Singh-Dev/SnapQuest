@@ -5,8 +5,8 @@ const getUserProfile = async (req, res) => {
   try {
     const user = await User.findById(req.params.id)
       .select("-password") // exclude password
-      .populate("followers", "username email profilePic") // populate followers
-      .populate("following", "username email profilePic"); // populate following
+      .populate("followers", "username email profilePic")
+      .populate("following", "username email profilePic"); // ✅ Added following
 
     if (!user) {
       return res.status(404).json({ message: "User not Found" });
@@ -25,7 +25,7 @@ const getMyProfile = async (req, res) => {
     const user = await User.findById(req.user._id)
       .select("-password")
       .populate("followers", "username email profilePic")
-      .populate("following", "username email profilePic");
+      .populate("following", "username email profilePic"); // ✅ Added following
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -38,39 +38,47 @@ const getMyProfile = async (req, res) => {
   }
 };
 
-// ✅ Follow/Unfollow another user
-const toggleFollowUser = async (req, res) => {
-  try {
-    const targetUser = await User.findById(req.params.id);
-    const currentUser = await User.findById(req.user.id);
+// ✅ Follow / Unfollow another user
+const toggleFollowUser = async(req,res) =>{
+  try{
+    const userToFollow = await User.findById(req.params.id);
+    const currentUser = await User.findById(req.user._id);
 
-    if (!targetUser || !currentUser) {
-      return res.status(404).json({ message: "User not found" });
+    if(!userToFollow){
+      return res.status(404).json({message : "User Not Found"});
     }
 
-    const isFollowing = targetUser.followers.includes(req.user.id);
-
-    if (isFollowing) {
-      // Unfollow
-      targetUser.followers.pull(req.user.id);
-      currentUser.following.pull(targetUser._id);
-    } else {
-      // Follow
-      targetUser.followers.push(req.user.id);
-      currentUser.following.push(targetUser._id);
+    if(userToFollow){
+      return res.status(404).json({message:"User not found"});
     }
 
-    await targetUser.save();
+    if(userToFollow._id.toString() === req.user._id.toString()){
+      return res.status(400).json({message:"You cannot follow yorself"});
+    }
+
+    const isFollowing = currentUser.following.includes(userToFollow._id);
+
+    if(isFollowing){
+      currentUser.following.pull(userToFollow._id);
+      userToFollow.followers.pull(currentUser._id);
+    } else{
+      currentUser.following.push(userToFollow._id);
+      userToFollow.followers.push(currentUser._id);
+    }
+
     await currentUser.save();
+    await userToFollow.save();
 
-    res.status(200).json({
-      message: isFollowing ? "Unfollowed user" : "Followed user",
+    res.json({
+      message:isFollowing ? "Unfollowed Successfully" : "Followed Successfully",
+      following : currentUser.following,
+      followers:userToFollow.followers,
     });
-  } catch (err) {
-    console.error("toggleFollow Error:", err.message);
-    res.status(500).json({ message: "Server Error" });
+  } catch(error){
+    res.status(500).json({message : "Server Error" , error:error.message});
   }
 };
+
 
 // ✅ Update profile
 const updateProfile = async (req, res) => {
