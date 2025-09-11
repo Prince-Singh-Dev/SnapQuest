@@ -7,7 +7,7 @@ const { protect } = require('../middleware/authMiddleware');
 const upload = require('../middleware/upload');
 
 //Get your own Profile
-router.get('/profile',protect,getMyProfile);
+router.get('/me',protect,getMyProfile);
 
 // Public Routes Setup to fetch a user's Profile
 router.get('/:id',getUserProfile);
