@@ -38,7 +38,7 @@ const getMyProfile = async (req, res) => {
   }
 };
 
-// ✅ Follow / Unfollow another user
+// Follow / Unfollow another user
 const toggleFollowUser = async(req,res) =>{
   try{
     const userToFollow = await User.findById(req.params.id);
@@ -80,7 +80,7 @@ const toggleFollowUser = async(req,res) =>{
 };
 
 
-// ✅ Update profile
+//  Update profile
 const updateProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);

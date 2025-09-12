@@ -55,10 +55,15 @@ function App() {
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Home />} />
+
             <Route path="/lessons" element={<Lessons />} />
+
             <Route path="/challenges" element={<Challenges />} />
+
             <Route path="/login" element={<Login />} />
+
             <Route path="/signup" element={<Signup />} />
+            
             <Route path="/profile" element={<Profile/>} />
 
             {/* Protected Routes */}
@@ -70,6 +75,16 @@ function App() {
                 </ProtectedRoute>
               }
             />
+
+            <Route
+              path="/user/:id"
+              element={
+                <ProtectedRoute>
+                  <UserProfile />
+                </ProtectedRoute>
+              }
+            />
+
             <Route
               path="/challenges/:id"
               element={
@@ -78,6 +93,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
+
             <Route
               path="/voting"
               element={
@@ -86,6 +102,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
+
           </Routes>
         </div>
       </Router>
