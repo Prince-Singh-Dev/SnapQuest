@@ -10,6 +10,7 @@ import Profile from "./pages/Profile";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Voting from "./pages/Voting";
+import UserProfile from "./pages/UserProfile"; // ✅ Added import
 
 import "./App.css";
 
@@ -55,16 +56,10 @@ function App() {
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Home />} />
-
             <Route path="/lessons" element={<Lessons />} />
-
             <Route path="/challenges" element={<Challenges />} />
-
             <Route path="/login" element={<Login />} />
-
             <Route path="/signup" element={<Signup />} />
-            
-            <Route path="/profile" element={<Profile/>} />
 
             {/* Protected Routes */}
             <Route
@@ -102,7 +97,6 @@ function App() {
                 </ProtectedRoute>
               }
             />
-
           </Routes>
         </div>
       </Router>
