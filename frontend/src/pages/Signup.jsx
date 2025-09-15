@@ -1,67 +1,67 @@
-import { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../context/AuthContext";
+import { useState , useContext } from "react";
 import axios from "axios";
-import "./Auth.css";
+import { AuthContext } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
-function Signup() {
-    const [username, setUsername] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const { login } = useContext(AuthContext);
+function Signup(){
+    const {login} = useContext(AuthContext);
     const navigate = useNavigate();
+    const [formData , setFormData] = useState({username : "",email:"",password:""});
+    const [error , setError] = useState("");
 
-    const handleSignup = async (e) => {
+    const handleChange = (e) =>{
+        setFormData({...formData,[e.target.name]:e.target.value});
+    };
+
+    const handleSubmit = async(e) => {
         e.preventDefault();
-        try {
-            const res = await axios.post("http://localhost:5000/api/auth/register", {
-                username: username.trim(),
-                email: email.trim().toLowerCase(),
-                password,
-            });
+        setError("");
 
-            alert("Signup Successful!");
+        try{
+            const res = await axios.post("http://localhost:5000/api/auth/register",formData);
 
-            // Correct login call
-            login(res.data.token, {
-                _id: res.data._id,
-                username: res.data.username,
-                email: res.data.email,
-            });
+            login(res.data.token,res.data.user);
 
             navigate("/profile");
-        } catch (err) {
-            console.error("Signup error: ", err.response?.data || err.message);
-            alert(err.response?.data?.message || "Signup Failed. Try Again.");
+        } catch(err){
+            setError(err.response?.data?.message || "Signup Failed");
         }
     };
 
     return (
-        <div className="auth-container">
-            <h1>Sign Up</h1>
-            <form onSubmit={handleSignup}>
+        <div>
+            <h2>Sign Up</h2>
+            {error && <p style={{color:"red"}}>{error}</p>}
+
+            <form onSubmit={handleSubmit}>
                 <input
                     type="text"
+                    name="username"
                     placeholder="Username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
+                    value={formData.username}
+                    onChange={handleChange}
                     required
                 />
+
                 <input
                     type="email"
+                    name="email"
                     placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={formData.email}
+                    onChange={handleChange}
                     required
                 />
+
                 <input
                     type="password"
-                    placeholder="Password (min 6 chars)"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    name="password"
+                    placeholder="Password"
+                    value={formData.password}
+                    onChange={handleChange}
                     required
                 />
-                <button type="submit">Create Account</button>
+
+                <button type="submit">Sign UP</button>
             </form>
         </div>
     );
