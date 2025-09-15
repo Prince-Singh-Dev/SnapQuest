@@ -1,54 +1,98 @@
-const User = require('../models/User');
-const jwt = require('jsonwebtoken');
+const User = require("../models/User.js");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 
-const generateToken = (userId) => {
-    return jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: '7d' });
+const generateToken = (id)=>{
+    return jwt .sign({id},process.env.JWT_SECRET,{
+        expiresIn:"7d",
+    });
 };
 
-const registerUser = async (req, res) => {
-    const { username, email, password } = req.body;
+const registerUser = async(req,res) => {
+    try{
+        const{username , email , password}=req.body;
 
-    try {
-        // Check if username OR email already exists
-        const existingUser = await User.findOne({ $or: [{ email }, { username }] });
-        if (existingUser) {
-            return res.status(400).json({ message: 'Username or Email already exists' });
+        if(!username || !email || !password){
+            return res.status(400).json({message : "All fields are required"});
         }
 
-        const newUser = await User.create({ username, email, password });
+        const existingUser = await User.findOne({email});
+        if(existingUser){
+            return res.status(400).json({message : "User already Exists"});
+        }
+
+        const newUser = await User.create({username , email , password});
+
+        const token = generateToken(newUser._id);
 
         res.status(201).json({
-            _id: newUser._id,
-            username: newUser.username,
-            email: newUser.email,
-            token: generateToken(newUser._id),
+            token,
+            user:{
+                _id:newUser._id,
+                username : newUser.username,
+                email: newUser.email,
+                profilePic : newUser.profilePic,
+                bio : newUser.bio,
+                followers:newUser.followers,
+                badges:newUser.badges,
+                perks:newUser.badges,
+                perks:newUser.perks,
+                streak:newUser.streak,
+            },
         });
-    } catch (err) {
-        console.error('Registration Error:', err.message);
-        res.status(500).json({ message: 'Server Error' });
+    } catch(err){
+        console.error(err);
+        res.status(500).json({message : "Server Error"});
     }
 };
 
-const loginUser = async (req, res) => {
-    const { email, password } = req.body;
+const loginUser = async(req,res)=>{
+    try{
+        const{email,password}=req.body;
 
-    try {
-        const user = await User.findOne({ email: email.toLowerCase().trim() });
-        if (!user) return res.status(400).json({ message: 'Invalid Credentials' });
+        const user = await User.findOne({email});
+        if(!user){
+            return res.status(400).json({message : "Invalid Credentials"});
+        }
 
         const isMatch = await user.matchPassword(password);
-        if (!isMatch) return res.status(400).json({ message: 'Invalid Credentials' });
+        if(!isMatch){
+            return res.status(400).json({message : "Invalid Credentials"});
+        }
 
-        res.status(200).json({
-            _id: user._id,
-            username: user.username,
-            email: user.email,
-            token: generateToken(user._id),
+        const token = generateToken(user._id);
+
+        res.json({
+            token,
+            user:{
+                _id:user._id,
+                username:user.username,
+                email:user.email,
+                profilePic:user.profilePic,
+                bio:user.bio,
+                followers:user.followers,
+                badges:user.badges,
+                perks:user.perks,
+                streak:user.streak,
+            },
         });
-    } catch (err) {
-        console.error('Login Error:', err.message);
-        res.status(500).json({ message: 'Server Error' });
+    } catch(err){
+        console.error(err);
+        res.status(500).json({message:"Server Error"});
     }
 };
 
-module.exports = { registerUser, loginUser };
+const getMe = async(req,res) => {
+    try{
+        const user = await User.findById(req.user.id).select("-password");
+        res.json(user);
+    } catch(err){
+        res.status(500).json({message : "Server Error"});
+    }
+};
+
+module.exports = {
+    registerUser,
+    loginUser,
+    getMe,
+};
