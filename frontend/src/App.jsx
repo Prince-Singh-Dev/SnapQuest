@@ -10,7 +10,9 @@ import Profile from "./pages/Profile";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Voting from "./pages/Voting";
-import UserProfile from "./pages/UserProfile"; // ✅ Added import
+import UserProfile from "./pages/UserProfile";
+import FollowersList from "./pages/FollowersList";
+import FollowingList from "./pages/FollowingList";
 
 import "./App.css";
 
@@ -76,6 +78,24 @@ function App() {
               element={
                 <ProtectedRoute>
                   <UserProfile />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/user/:id/followers"
+              element={
+                <ProtectedRoute>
+                  <FollowersList/>
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/user/:id/following"
+              element={
+                <ProtectedRoute>
+                  <FollowingList/>
                 </ProtectedRoute>
               }
             />
