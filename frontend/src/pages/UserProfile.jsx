@@ -85,8 +85,20 @@ function UserProfile() {
 
       {/* === STATS === */}
       <div className="profile-stats">
-        <p><b>Followers:</b> {user.followers?.length || 0}</p>
-        <p><b>Following:</b> {user.following?.length || 0}</p>
+        <p>
+          <b>Followers :</b>{" "}
+          <Link to={`/user/${user._id}/followers`}>
+            {user.followers?.length || 0}
+          </Link>
+        </p>
+
+        <p>
+          <b>Following:</b>{" "}
+          <Link to={`/user/${user._id}/following`}>
+            {user.following?.length || 0}
+          </Link>
+        </p>
+
         <p><b>Badges:</b> {user.badges?.length || 0}</p>
         <p><b>Points:</b> {user.points}</p>
         <p><b>Perks:</b> {user.perks}</p>
