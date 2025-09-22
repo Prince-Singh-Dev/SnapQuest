@@ -39,7 +39,7 @@ const getMyProfile = async (req, res) => {
 };
 
 // Follow / Unfollow another user
-const toggleFollowUser = async(req,res) =>{
+const toggleFollowUser = async(req,res) => {
   try{
     const userToFollow = await User.findById(req.params.id);
     const currentUser = await User.findById(req.user._id);
@@ -48,12 +48,8 @@ const toggleFollowUser = async(req,res) =>{
       return res.status(404).json({message : "User Not Found"});
     }
 
-    if(userToFollow){
-      return res.status(404).json({message:"User not found"});
-    }
-
     if(userToFollow._id.toString() === req.user._id.toString()){
-      return res.status(400).json({message:"You cannot follow yorself"});
+      return res.status(400).json({message : "You cannot follow Yourself"});
     }
 
     const isFollowing = currentUser.following.includes(userToFollow._id);
@@ -61,7 +57,7 @@ const toggleFollowUser = async(req,res) =>{
     if(isFollowing){
       currentUser.following.pull(userToFollow._id);
       userToFollow.followers.pull(currentUser._id);
-    } else{
+    } else {
       currentUser.following.push(userToFollow._id);
       userToFollow.followers.push(currentUser._id);
     }
@@ -70,12 +66,12 @@ const toggleFollowUser = async(req,res) =>{
     await userToFollow.save();
 
     res.json({
-      message:isFollowing ? "Unfollowed Successfully" : "Followed Successfully",
+      message : isFollowing ? "Unfollowed Successfully" : "Followed Successfully",
       following : currentUser.following,
-      followers:userToFollow.followers,
-    });
-  } catch(error){
-    res.status(500).json({message : "Server Error" , error:error.message});
+      followers : userToFollow.followers,
+  });
+  } catch (error){
+    res.status(500).json({message : "Server Error",error:error.message});
   }
 };
 
