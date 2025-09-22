@@ -1,5 +1,5 @@
 import { useEffect , useState , useContext } from "react";
-import { useParams,Link } from "react-router-dom";
+import { useParams,Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
 import "./Profile.css";
@@ -9,6 +9,7 @@ function FollowingList(){
     const {token} = useContext(AuthContext);
     const [following , setFollowing ] =useState([]);
     const [loading , setLoading] = useState(true);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchFollowing = async() =>{
@@ -31,6 +32,7 @@ function FollowingList(){
 
     return (
         <div className="profile-following full-list">
+            <button className="back-btn" onClick={() => navigate(-1)}>⬅ Back to Profile</button>
             <h2>Following</h2>
             {following.length > 0 ? (
                 <ul>
