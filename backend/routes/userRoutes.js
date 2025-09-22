@@ -1,8 +1,8 @@
 // User Route Setting Up
 
 const express = require('express');
-const router = express.Router();
 const { getUserProfile , toggleFollowUser, getMyProfile , updateProfile, uploadProfilePic} = require('../controllers/userController');
+const router = express.Router();
 const { protect } = require('../middleware/authMiddleware');
 const upload = require('../middleware/upload');
 
@@ -19,6 +19,6 @@ router.put('/update',protect,updateProfile);
 router.post('/profile/upload',protect,upload.single('profilePic'),uploadProfilePic);
 
 // Protected route to follow and Unfollow a user
-router.put('/:id/follow', protect,toggleFollowUser);
+router.post('/:id/follow', protect,toggleFollowUser);
 
 module.exports = router;
