@@ -5,25 +5,29 @@ const Submission = require('../models/Submission');
 const User = require('../models/User');
 
 // Creating a new Challenge
-const createChallenge = asyncHandler(async (req,res) => {
-    const {title , description , deadline , rewardPoints , rewardPerks } = req.body;
+const createChallenge = asyncHandler(async (req, res) => {
+    const { title, description, startDate, endDate, rewardPoints, rewardPerks } = req.body;
 
-    if(!title || !description || !deadline){
+    // Validate required fields
+    if (!title || !description || !startDate || !endDate) {
         res.status(400);
-        throw new Error('Please fill all required Fields');
+        throw new Error('Please fill all required fields: title, description, startDate, endDate');
     }
 
+    // Create the challenge
     const challenge = await Challenge.create({
         title,
         description,
-        deadline,
-        rewardPoints : rewardPoints||0,
-        rewardPerks : rewardPerks||0,
-        createdBy : req.user._id
+        startDate,
+        endDate,
+        rewardPoints: rewardPoints || 0,
+        rewardPerks: rewardPerks || 0,
+        createdBy: req.user._id
     });
 
     res.status(201).json(challenge);
 });
+
 
 //Get all challenges ( access for admin view only )
 

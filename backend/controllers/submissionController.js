@@ -6,7 +6,14 @@ const Challenge = require('../models/challenge');
 // @desc Submit to challenge
 const submitToChallenge = asyncHandler(async (req, res) => {
     const { challengeId } = req.params;
-    const { photo } = req.body; // This will be file path if using Multer
+
+    // Check if file is uploaded
+    if (!req.file) {
+        res.status(400);
+        throw new Error('No file uploaded for submission');
+    }
+
+    const photoPath = `/uploads/submissions/${req.file.filename}`;
 
     // Validate challenge exists
     const challenge = await Challenge.findById(challengeId);
@@ -30,7 +37,7 @@ const submitToChallenge = asyncHandler(async (req, res) => {
     const submission = await Submission.create({
         challenge: challengeId,
         user: req.user._id,
-        photo
+        photo: photoPath
     });
 
     res.status(201).json(submission);
@@ -61,7 +68,7 @@ const getChallengeSubmissions = asyncHandler(async (req, res) => {
                 voteCount: 1,
                 createdAt: 1,
                 "userDetails._id": 1,
-                "userDetails.name": 1,
+                "userDetails.username": 1,
                 "userDetails.profilePic": 1
             }
         }
