@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { AuthProvider, AuthContext } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Home from "./pages/Home";
-import Lessons from "./pages/Lessons";
+import LessonList from "./pages/LessonList";
 import Challenges from "./pages/Challenges";
 import ChallengeDetails from "./pages/ChallengeDetails";
 import Profile from "./pages/Profile";
@@ -58,7 +58,7 @@ function App() {
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Home />} />
-            <Route path="/lessons" element={<Lessons />} />
+            <Route path="/lessons" element={<LessonList />} />
             <Route path="/challenges" element={<Challenges />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
