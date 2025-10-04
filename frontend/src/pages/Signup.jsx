@@ -2,6 +2,7 @@ import { useState , useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import "./Signup.css";
 
 function Signup(){
     const {login} = useContext(AuthContext);
@@ -29,40 +30,45 @@ function Signup(){
     };
 
     return (
-        <div>
-            <h2>Sign Up</h2>
-            {error && <p style={{color:"red"}}>{error}</p>}
+        <div className="signup-container">
+            <div className="signup-card">
+                <h2 className="signup-title">Sign Up</h2>
+                {error && <p className="signup-error">{error}</p>}
 
-            <form onSubmit={handleSubmit}>
-                <input
-                    type="text"
-                    name="username"
-                    placeholder="Username"
-                    value={formData.username}
-                    onChange={handleChange}
-                    required
-                />
+                <form onSubmit={handleSubmit}>
+                    <input
+                        className="signup-input"
+                        type="text"
+                        name="username"
+                        placeholder="Username"
+                        value={formData.username}
+                        onChange={handleChange}
+                        required
+                    />
 
-                <input
-                    type="email"
-                    name="email"
-                    placeholder="Email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                />
+                    <input
+                        className="signup-input"
+                        type="email"
+                        name="email"
+                        placeholder="Email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        required
+                    />
 
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="Password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    required
-                />
+                    <input
+                        className="signup-input"
+                        type="password"
+                        name="password"
+                        placeholder="Password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        required
+                    />
 
-                <button type="submit">Sign UP</button>
-            </form>
+                    <button className="signup-button" type="submit">Sign Up</button>
+                </form>
+            </div>
         </div>
     );
 }
