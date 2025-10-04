@@ -1,19 +1,27 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
+import { useContext } from "react";
 
 const LessonList = () => {
+  const {user,token} = useContext(AuthContext);
   const [lessons, setLessons] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const fetchLessons = async () => {
-      try {
-        const { data } = await axios.get("/api/lessons");
+    const fetchLessons = async() => {
+      try{
+        const {data} = await axios.get("http://localhost:5000/api/lessons" , {
+          headers : {
+            Authorization : `Bearer ${token}`
+          }
+        });
         setLessons(data);
-      } catch (err) {
-        setError("Failed to load lessons");
+      } catch(err){
+        setError("Failed to load Lessons");
+        console.error(err);
       } finally {
         setLoading(false);
       }
